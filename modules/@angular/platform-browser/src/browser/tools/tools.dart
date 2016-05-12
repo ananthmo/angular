@@ -1,5 +1,6 @@
 library angular2.src.tools.tools;
 
+import 'dart:converter';
 import 'dart:js';
 import 'package:angular2/src/core/linker/component_factory.dart'
     show ComponentRef;
@@ -21,7 +22,11 @@ void enableDebugTools(ComponentRef<dynamic> ref) {
   context['ng'] = new JsObject.jsify({
     'profiler': {
       'timeChangeDetection': ([config]) {
-        tools.profiler.timeChangeDetection(config);
+        var perfMetrics = tools.profiler.timeChangeDetection(config);
+        var metricMap = new Map();
+        metricMap["msPerTick"] = perfMetrics.msPerTick;
+        metricMap["numTicks"] = perfMetrics.numTicks;
+        return JSON.encode(metricMap);
       }
     }
   });
